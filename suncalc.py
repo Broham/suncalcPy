@@ -1,9 +1,9 @@
 import math
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import calendar
 
-PI   = math.pi
+PI   = 3.141592653589793 # math.pi
 sin  = math.sin
 cos  = math.cos
 tan  = math.tan
@@ -47,7 +47,6 @@ def toJulian(date):
 
 def fromJulian(j):
 	return datetime.fromtimestamp(((j + 0.5 - J1970) * dayMs)/1000.0)
-	# return new Date((j + 0.5 - J1970) * dayMs)
 
 def toDays(date):   
  	return toJulian(date) - J2000
@@ -68,7 +67,6 @@ def hourAngle(h, phi, d):
 	except ValueError as e:
 		print(h, phi, d)
 		print e
-	# return acos((sin(h) - sin(phi) * sin(d)) / (cos(phi) * cos(d))); }
 
 def solarMeanAnomaly(d):
 	return rad * (357.5291 + 0.98560028 * d)
@@ -79,10 +77,8 @@ def eclipticLongitude(M):
     return M + C + P + PI
 
 def sunCoords(d):
-    # print("d",d)
     M = solarMeanAnomaly(d)
     L = eclipticLongitude(M)
-    # print("M", M, "L", L)
     return dict(dec= declination(L, 0),ra= rightAscension(L, 0))
 
 def getSetJ(h, lw, phi, dec, n, M, L):
@@ -139,28 +135,26 @@ def getTimes(date, lat, lng):
     	time = times[i]
         Jset = getSetJ(time[0] * rad, lw, phi, dec, n, M, L);
         Jrise = Jnoon - (Jset - Jnoon);
-        # print "time[1]",time[1],"Jrise", Jrise, "from", fromJulian(Jrise).strftime('%Y-%m-%d %H:%M:%S')
         result[time[1]] = fromJulian(Jrise).strftime('%Y-%m-%d %H:%M:%S');
         result[time[2]] = fromJulian(Jset).strftime('%Y-%m-%d %H:%M:%S');
 
-    # print "result", result
     return result
 
+def hoursLater(date, h):
+	return date +  + timedelta(hours=h)
+
 def getMoonTimes(date, lat, lng):
-    t = date(date)
-    t.setHours(0)
-    t.setMinutes(0)
-    t.setSeconds(0)
-    t.setMilliseconds(0)
+    t = date.replace(hour=0,minute=0,second=0)
 
     hc = 0.133 * rad
-    h0 = SunCalc.getMoonPosition(t, lat, lng).altitude - hc
-    h1, h2, rise, set, a, b, xe, ye, d, roots, x1, x2, dx
-
+    pos = getMoonPosition(t, lat, lng)
+    h0 = pos["altitude"] - hc
+    rise = 0
+    sett = 0
     # go in 2-hour chunks, each time seeing if a 3-point quadratic curve crosses zero (which means rise or set)
     for i in range(1,24,2):
-        h1 = getMoonPosition(hoursLater(t, i), lat, lng).altitude - hc
-        h2 = getMoonPosition(hoursLater(t, i + 1), lat, lng).altitude - hc
+        h1 = getMoonPosition(hoursLater(t, i), lat, lng)["altitude"] - hc
+        h2 = getMoonPosition(hoursLater(t, i + 1), lat, lng)["altitude"] - hc
 
         a = (h0 + h2) / 2 - h1
         b = (h2 - h0) / 2
@@ -170,12 +164,12 @@ def getMoonTimes(date, lat, lng):
         roots = 0
 
         if d >= 0:
-            dx = Math.sqrt(d) / (Math.abs(a) * 2)
+            dx = math.sqrt(d) / (abs(a) * 2)
             x1 = xe - dx
             x2 = xe + dx
-            if Math.abs(x1) <= 1: 
+            if abs(x1) <= 1: 
                 roots += 1
-            if Math.abs(x2) <= 1:
+            if abs(x2) <= 1:
                 roots += 1
             if x1 < -1:
                 x1 = x2
@@ -184,13 +178,13 @@ def getMoonTimes(date, lat, lng):
             if h0 < 0: 
                 rise = i + x1
             else:
-                set = i + x1
+                sett = i + x1
 
         elif roots == 2:
             rise = i + (x2 if ye < 0 else x1)
-            set = i + (x1 if ye < 0 else x2)
+            sett = i + (x1 if ye < 0 else x2)
 
-        if (rise and set):
+        if (rise and sett):
             break
 
         h0 = h2
@@ -199,10 +193,10 @@ def getMoonTimes(date, lat, lng):
 
     if (rise):
         result["rise"] = hoursLater(t, rise)
-    if (set):
-        result["set"] = hoursLater(t, set)
+    if (sett):
+        result["set"] = hoursLater(t, sett)
 
-    if (not rise and not set):
+    if (not rise and not sett):
         value = 'alwaysUp' if ye > 0 else 'alwaysDown'
         result[value] = true
 
@@ -229,7 +223,7 @@ def getPosition(date, lat, lng):
 
     c  = sunCoords(d)
     H  = siderealTime(d, lw) - c["ra"]
-    print("d", d, "c",c,"H",H,"phi", phi)
+    # print("d", d, "c",c,"H",H,"phi", phi)
     return dict(azimuth=azimuth(H, phi, c["dec"]), altitude=altitude(H, phi, c["dec"]))
 
 # def getMoonAndSunrise(date, lat, lng):
