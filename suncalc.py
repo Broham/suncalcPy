@@ -14,7 +14,7 @@ rad  = PI / 180.0
 dayMs = 1000 * 60 * 60 * 24
 J1970 = 2440588
 J2000 = 2451545
-J0 = 0.0009;
+J0 = 0.0009
 
 times  = [
     [-0.833, 'sunrise',       'sunset'      ],
@@ -66,7 +66,7 @@ def hourAngle(h, phi, d):
 		return ret
 	except ValueError as e:
 		print(h, phi, d)
-		print e
+		print(e)
 
 def solarMeanAnomaly(d):
 	return rad * (357.5291 + 0.98560028 * d)
@@ -107,7 +107,7 @@ def getMoonIllumination(date):
     sdist = 149598000
     phi = acos(sin(s["dec"]) * sin(m["dec"]) + cos(s["dec"]) * cos(m["dec"]) * cos(s["ra"] - m["ra"]))
     inc = atan(sdist * sin(phi), m["dist"] - sdist * cos(phi))
-    angle = atan(cos(s["dec"]) * sin(s["ra"] - m["ra"]), sin(s["dec"]) * cos(m["dec"]) - cos(s["dec"]) * sin(m["dec"]) * cos(s["ra"] - m["ra"]));
+    angle = atan(cos(s["dec"]) * sin(s["ra"] - m["ra"]), sin(s["dec"]) * cos(m["dec"]) - cos(s["dec"]) * sin(m["dec"]) * cos(s["ra"] - m["ra"]))
 
     return dict(fraction=(1 + cos(inc)) / 2, phase= 0.5 + 0.5 * inc * (-1 if angle < 0 else 1) / PI, angle= angle)
 
@@ -133,10 +133,10 @@ def getTimes(date, lat, lng):
 
     for i in range(0, len(times)):
     	time = times[i]
-        Jset = getSetJ(time[0] * rad, lw, phi, dec, n, M, L);
-        Jrise = Jnoon - (Jset - Jnoon);
-        result[time[1]] = fromJulian(Jrise).strftime('%Y-%m-%d %H:%M:%S');
-        result[time[2]] = fromJulian(Jset).strftime('%Y-%m-%d %H:%M:%S');
+        Jset = getSetJ(time[0] * rad, lw, phi, dec, n, M, L)
+        Jrise = Jnoon - (Jset - Jnoon)
+        result[time[1]] = fromJulian(Jrise).strftime('%Y-%m-%d %H:%M:%S')
+        result[time[2]] = fromJulian(Jset).strftime('%Y-%m-%d %H:%M:%S')
 
     return result
 
@@ -228,7 +228,7 @@ def getPosition(date, lat, lng):
 
 # def getMoonAndSunrise(date, lat, lng):
 # 	# print(date,lat,lng)
-# 	currentDate = datetime.strptime(date,'%Y-%m-%d %H:%M:%S');
+# 	currentDate = datetime.strptime(date,'%Y-%m-%d %H:%M:%S')
 # 	times = getTimes(currentDate, float(lat), float(lng))
 # 	moon = getMoonIllumination(currentDate)
 # 	sunrise = datetime.strptime(times["sunrise"],'%Y-%m-%d %H:%M:%S')
