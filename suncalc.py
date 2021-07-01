@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import time
 import calendar
 
-PI   = math.pi
+PI   = 3.141592653589793 # math.pi
 sin  = math.sin
 cos  = math.cos
 tan  = math.tan
@@ -198,7 +198,7 @@ def getMoonTimes(date, lat, lng):
 
     if (not rise and not sett):
         value = 'alwaysUp' if ye > 0 else 'alwaysDown'
-        result[value] = true
+        result[value] = True
 
     return result
 
@@ -226,19 +226,11 @@ def getPosition(date, lat, lng):
     # print("d", d, "c",c,"H",H,"phi", phi)
     return dict(azimuth=azimuth(H, phi, c["dec"]), altitude=altitude(H, phi, c["dec"]))
 
-# def getMoonAndSunrise(date, lat, lng):
-# 	# print(date,lat,lng)
-# 	currentDate = datetime.strptime(date,'%Y-%m-%d %H:%M:%S');
-# 	times = getTimes(currentDate, float(lat), float(lng))
-# 	moon = getMoonIllumination(currentDate)
-# 	sunrise = datetime.strptime(times["sunrise"],'%Y-%m-%d %H:%M:%S')
-# 	fraction = float(moon["fraction"])
-# 	return dict(sunrise=sunrise, fraction=fraction)
-
-# testDate = datetime.strptime('2015-04-17 17:00:00','%Y-%m-%d %H:%M:%S')
-# sunTimes = getTimes(testDate, 37.7745985956747,-122.425891675136)
-
-# data = getMoonAndSunrise('2015-04-17 17:00:00', "37.7745985956747","-122.425891675136")
-
-# print(testDate.strftime('%Y-%m-%d %H:%M:%S'), data["sunrise"].strftime('%Y-%m-%d %H:%M:%S'))
-# print(data["fraction"])
+def getMoonAndSunrise(date, lat, lng):
+ 	# print(date,lat,lng)
+ 	currentDate = datetime.strptime(date,'%Y-%m-%d %H:%M:%S');
+ 	times = getTimes(currentDate, float(lat), float(lng))
+ 	moon = getMoonIllumination(currentDate)
+ 	sunrise = datetime.strptime(times["sunrise"],'%Y-%m-%d %H:%M:%S')
+ 	fraction = float(moon["fraction"])
+ 	return dict(sunrise=sunrise, fraction=fraction)
