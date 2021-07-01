@@ -223,7 +223,6 @@ def getPosition(date, lat, lng):
 
     c  = sunCoords(d)
     H  = siderealTime(d, lw) - c["ra"]
-
     return dict(azimuth=azimuth(H, phi, c["dec"]), altitude=altitude(H, phi, c["dec"]))
 
 def getMoonAndSunrise(date, lat, lng):
