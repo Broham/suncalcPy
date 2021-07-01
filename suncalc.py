@@ -224,12 +224,3 @@ def getPosition(date, lat, lng):
     c  = sunCoords(d)
     H  = siderealTime(d, lw) - c["ra"]
     return dict(azimuth=azimuth(H, phi, c["dec"]), altitude=altitude(H, phi, c["dec"]))
-
-def getMoonAndSunrise(date, lat, lng):
- 	# print(date,lat,lng)
- 	currentDate = datetime.strptime(date,'%Y-%m-%d %H:%M:%S');
- 	times = getTimes(currentDate, float(lat), float(lng))
- 	moon = getMoonIllumination(currentDate)
- 	sunrise = datetime.strptime(times["sunrise"],'%Y-%m-%d %H:%M:%S')
- 	fraction = float(moon["fraction"])
- 	return dict(sunrise=sunrise, fraction=fraction)
