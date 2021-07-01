@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import time
 import calendar
 
-PI   = 3.141592653589793 # math.pi
+PI   = math.pi
 sin  = math.sin
 cos  = math.cos
 tan  = math.tan
