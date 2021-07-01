@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import time
 import calendar
 
-PI   = 3.141592653589793 # math.pi
+PI   = math.pi
 sin  = math.sin
 cos  = math.cos
 tan  = math.tan
@@ -66,7 +66,7 @@ def hourAngle(h, phi, d):
 		return ret
 	except ValueError as e:
 		print(h, phi, d)
-		print e
+		print(e)
 
 def solarMeanAnomaly(d):
 	return rad * (357.5291 + 0.98560028 * d)
@@ -132,7 +132,7 @@ def getTimes(date, lat, lng):
     result = dict()
 
     for i in range(0, len(times)):
-    	time = times[i]
+        time = times[i]
         Jset = getSetJ(time[0] * rad, lw, phi, dec, n, M, L);
         Jrise = Jnoon - (Jset - Jnoon);
         result[time[1]] = fromJulian(Jrise).strftime('%Y-%m-%d %H:%M:%S');
